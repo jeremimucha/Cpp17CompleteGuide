@@ -4,6 +4,7 @@
  * C++17 allows using an integral value of an underlying enumeration type for direct initialization.
  * This requires underlying type to be explicitly specified for unscoped enums, and always works
  * for scoped enums (they have a default underlying type).
+ * This is intended to be used for defining custom integral types. C=+17 introduces std::byte.
  */
 
 enum class Weekday { mon, tue, wed, thu, fri, sat, sun };
