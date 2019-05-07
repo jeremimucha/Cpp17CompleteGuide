@@ -107,8 +107,12 @@ int main()
         // using std::any_cast on a pointer to std::any returns a pointer to the held value,
         // if the actual type matches the requested type, or nullptr if it doesn't
         // this might be a convenient option instead of explicitly checking .type()
+        // Cast to type `T` when using this from,
+        // attempting to cast to `T*` will result in the implementation assuming that you're
+        // expecting the held type to be `T*` (and not `T`)
+        // attempting to cast to `T&` is an error
         auto pi = std::any_cast<int>(&a);   // returns nullptr, would throw if used on ref to any
-        auto ps = std::any_cast<std::string>(&a);   // returns pointer to std::string
+        auto ps = std::any_cast<std::string const>(&a);   // returns pointer to std::string
         if (pi != nullptr ){
             std::cerr << "std::any_cast<int>(&a) returned a valid pointer, value = " << *pi << "\n";
         }
@@ -116,7 +120,7 @@ int main()
             std::cerr << "std::any_cast<int>(&a) returned a nullptr\n";
         }
         if (ps != nullptr) {
-            std::cerr << "std::any_cast<std::string<(&a) returned a valid pointer, value = "
+            std::cerr << "std::any_cast<std::string>(&a) returned a valid pointer, value = "
                 << *ps << "\n";
         }
         else {
