@@ -1,13 +1,7 @@
 cmake_minimum_required( VERSION 3.13 )
 
-project( cpp17_complete_guide )
+project( operator_new )
 
-add_library(cpp17_utils INTERFACE)
-add_library(cpp17::utils ALIAS cpp17_utils)
-target_include_directories(cpp17_utils
-  INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  )
 
 ###############################################################################
 # Prepare source files for build
@@ -44,7 +38,7 @@ endif()
 
 add_library(Project_config INTERFACE)
 if( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
-    target_compile_options( Project_config INTERFACE /W4 /WX )
+    target_compile_options( Project_config INTERFACE /W4 /WX /permissive- )
 else()
     if(CMAKE_BUILD_TYPE MATCHES Debug)
       target_compile_options( Project_config INTERFACE
@@ -105,7 +99,7 @@ else()
           --coverage
       )
     endif()
-    target_link_options( Project_config INTERFACE
+    target_compile_options( Project_config INTERFACE
         -fuse-ld=gold
     )
     if(ENABLE_ASAN)
@@ -177,13 +171,18 @@ foreach( target ${Sources} )
   string(REGEX MATCH "^[^ .]*" fname ${target} )
   MESSAGE( STATUS "Executable: ${fname}" )
   add_executable( ${fname} ${target} )
-  # target_compile_options( ${fname} PUBLIC
+  target_compile_options( ${fname} PUBLIC
   #   # -fprofile-arcs -ftest-coverage
   #   -fconcepts
-  #   -lstdc++fs
-  # )
+    # -lstdc++fs
+    $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>
+  )
   target_link_libraries( ${fname}
     Project_config
+    -lstdc++fs
+    $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>
+    $<$<CXX_COMPILER_ID:Clang>:-lc++abi>
+    cpp17::utils
     # ${Boost_LIBRARIES}
     )
   target_include_directories(${fname}
