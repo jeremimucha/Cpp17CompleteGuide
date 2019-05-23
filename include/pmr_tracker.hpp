@@ -15,6 +15,7 @@ private:
     std::string prefix_{};
 
 public:
+    TrackingResource() = default;
     explicit TrackingResource(std::string p) noexcept
         : prefix_{std::move(p)} { }
     explicit TrackingResource(std::string p, std::pmr::memory_resource* us)
