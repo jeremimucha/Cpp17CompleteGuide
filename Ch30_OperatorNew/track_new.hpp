@@ -9,6 +9,11 @@
 #include <malloc.h>  // for _aligned_malloc() and _aligned_free()
 #endif
 
+/**
+ * Thanks to C++17's inline-variables it is now easy to track all new/delete calls just by including
+ * a single header file.
+ */
+
 class TrackNew {
 private:
     static inline int numMalloc = 0;     // num malloc calls
@@ -59,6 +64,7 @@ public:
         }
         return p;
     }
+
     static void status() noexcept
     {  // print current state
         printf("%d allocations for %zu bytes\n", numMalloc, sumSize);

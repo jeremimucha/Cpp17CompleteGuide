@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.13 )
 
-project( operator_new )
+project( generic_code_improvements )
 
 
 ###############################################################################
@@ -176,13 +176,10 @@ foreach( target ${Sources} )
   #   # -fprofile-arcs -ftest-coverage
   #   -fconcepts
     # -lstdc++fs
-    $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>
   )
   target_link_libraries( ${fname}
     Project_config
     -lstdc++fs
-    $<$<CXX_COMPILER_ID:Clang>:-stdlib=libc++>
-    $<$<CXX_COMPILER_ID:Clang>:-lc++abi>
     # ${Boost_LIBRARIES}
     )
   target_include_directories(${fname}
